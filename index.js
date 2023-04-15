@@ -27,12 +27,14 @@ let persons = [
     ]
 
 
+//
 // Summary: GET - fetch all persons
 app.get('/api/persons', (request, response) => {
     response.json(persons);
 })
 
 
+//
 // Summary: GET - display number of items in persons & time request was made
 app.get('/api/info', (request, response) => {
     const CurrentDateTime = new Date()
@@ -43,6 +45,7 @@ app.get('/api/info', (request, response) => {
 })
 
 
+//
 // Summary: GET - fetch individual person
 app.get('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
@@ -58,6 +61,7 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 
+//
 // Summary: DELETE - delete a single person
 app.delete('/api/persons/:id', (request, response) => {
     const id = Number(request.params.id)
@@ -66,6 +70,29 @@ app.delete('/api/persons/:id', (request, response) => {
     response.status(204).end() //Status Code 204 = "No Content"
 })
 
+
+//
+// Summary: Generate random Id
+const randomId = () => {
+    const randomNumber = Math.floor(Math.random() * 10000)
+    return randomNumber
+}
+
+//
+// Summary: POST - create a new person
+app.post('/api/persons', (request, response) => {
+    const body = request.body
+    
+    const person = {
+        id: randomId(),
+        name: body.name,
+        number: body.number
+    }
+    
+    persons = persons.concat(person)
+    
+    response.json(person)
+})
 
 const PORT = 3001
 app.listen(PORT, () => {
