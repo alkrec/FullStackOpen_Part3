@@ -27,10 +27,19 @@ let persons = [
     ]
 
 
-// Summary: GET - all persons resources
+// Summary: GET - fetch all persons
 app.get('/api/persons', (request, response) => {
-    console.log(request)
     response.json(persons);
+})
+
+
+//Summary: GET - display number of items in persons & time request was made
+app.get('/api/info', (request, response) => {
+    const CurrentDateTime = new Date()
+    
+    response.send(`
+    <p>Phonebook has info for ${persons.length} people</p>
+    <p>${CurrentDateTime}</p>`)
 })
 
 
