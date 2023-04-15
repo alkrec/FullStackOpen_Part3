@@ -58,6 +58,15 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 
+// Summary: DELETE - delete a single person
+app.delete('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+
+    persons = persons.filter(person => person.id !== id)
+    response.status(204).end() //Status Code 204 = "No Content"
+})
+
+
 const PORT = 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
