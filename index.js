@@ -1,7 +1,10 @@
 const express = require('express')
+const morgan = require('morgan')  //CHECK?? in documentation var is used instead of const
+
 const app = express()
 
 app.use(express.json())
+app.use(morgan('tiny'))
 
 let persons = [
         { 
