@@ -83,16 +83,34 @@ const randomId = () => {
 app.post('/api/persons', (request, response) => {
     const body = request.body
     
-    const person = {
+    if(!request.body.name || !request.body.number) { //Error handling for missing content
+        return response.status(400).json(  // Status Code 400 = "Bad Request"
+            {
+                error: "name or number missing"
+            }
+        )
+    }
+
+    const names = persons.map(person => person.name)
+    if (names.includes(request.body.name)) { //Error handling for same name
+        return response.status(400).json( // Status Code 400 = "Bad Request"
+            {
+                error: "name must be unique"
+            }
+        )
+    }
+    
+    const person = { // create new person object from request body
         id: randomId(),
         name: body.name,
         number: body.number
     }
     
-    persons = persons.concat(person)
-    
-    response.json(person)
+    persons = persons.concat(person) //add new person object to persons array
+
+    response.json(person) // send new person object as response body
 })
+
 
 const PORT = 3001
 app.listen(PORT, () => {
