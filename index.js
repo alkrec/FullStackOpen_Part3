@@ -33,13 +33,28 @@ app.get('/api/persons', (request, response) => {
 })
 
 
-//Summary: GET - display number of items in persons & time request was made
+// Summary: GET - display number of items in persons & time request was made
 app.get('/api/info', (request, response) => {
     const CurrentDateTime = new Date()
-    
+
     response.send(`
     <p>Phonebook has info for ${persons.length} people</p>
     <p>${CurrentDateTime}</p>`)
+})
+
+
+// Summary: GET - fetch individual person
+app.get('/api/persons/:id', (request, response) => {
+    const id = Number(request.params.id)
+
+    const person = persons.find(person => person.id === id)
+
+    if(person) {
+        response.json(person)
+    } else {
+        response.status(404).end() //Status Code 404 = "Not Found"
+    }
+    console.log(id);
 })
 
 
