@@ -4,7 +4,15 @@ const morgan = require('morgan')  //CHECK?? in documentation var is used instead
 const app = express()
 
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :personOutput')) // from method to response-time, it is equilivant to 'tiny'
+
+morgan.token('personOutput', function(req, res) { //customize log out for :personOutput for 'morgan'
+    const person = {
+        name: req.body.name,
+        number: req.body.number
+    }
+    return JSON.stringify(person)
+})
 
 let persons = [
         { 
