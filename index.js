@@ -1,10 +1,12 @@
 const express = require('express')
 const morgan = require('morgan')  //CHECK?? in documentation var is used instead of const
+const cors = require('cors')
 
 const app = express()
 
 app.use(express.json())
 app.use(express.static('build'))
+app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :personOutput')) // from method to response-time, it is equilivant to 'tiny'
 
 morgan.token('personOutput', function(req, res) { //customize log out for :personOutput for 'morgan'
