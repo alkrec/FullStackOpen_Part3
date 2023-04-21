@@ -1,12 +1,15 @@
 const express = require('express')
 const morgan = require('morgan')  //CHECK?? in documentation var is used instead of const
 const cors = require('cors')
+require('dotenv').config()
+
+const Person = require('./models/Person')
 
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 app.use(express.static('build'))
-app.use(cors())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :personOutput')) // from method to response-time, it is equilivant to 'tiny'
 
 morgan.token('personOutput', function(req, res) { //customize log out for :personOutput for 'morgan'
@@ -44,7 +47,13 @@ let persons = [
 //
 // Summary: GET - fetch all persons
 app.get('/api/persons', (request, response) => {
-    response.json(persons);
+    Person.find({}).then(persons => {
+        console.log("phonebook:")
+        persons.forEach(person => console.log(`${person.name} ${person.number}`))
+        response.json(persons)
+        // mongoose.connection.close()
+    })
+    // response.json(persons);
 })
 
 
@@ -62,16 +71,18 @@ app.get('/api/info', (request, response) => {
 //
 // Summary: GET - fetch individual person
 app.get('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
-
-    const person = persons.find(person => person.id === id)
-
-    if(person) {
+    // const id = Number(request.params.id)
+    // const person = persons.find(person => person.id === id)
+    Person.findById(request.params.id).then(person => {
         response.json(person)
-    } else {
-        response.status(404).end() //Status Code 404 = "Not Found"
-    }
-    console.log(id);
+    })
+
+    // if(person) {
+    //     response.json(person)
+    // } else {
+    //     response.status(404).end() //Status Code 404 = "Not Found"
+    // }
+    // console.log(id);
 })
 
 
@@ -126,7 +137,7 @@ app.post('/api/persons', (request, response) => {
 })
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
