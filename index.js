@@ -96,44 +96,54 @@ app.delete('/api/persons/:id', (request, response) => {
 })
 
 
-//
-// Summary: Generate random Id
-const randomId = () => {
-    const randomNumber = Math.floor(Math.random() * 10000)
-    return randomNumber
-}
+// //
+// // Summary: Generate random Id
+// const randomId = () => {
+//     const randomNumber = Math.floor(Math.random() * 10000)
+//     return randomNumber
+// }
 
 //
 // Summary: POST - create a new person
 app.post('/api/persons', (request, response) => {
     const body = request.body
     
-    if(!request.body.name || !request.body.number) { //Error handling for missing content
-        return response.status(400).json(  // Status Code 400 = "Bad Request"
-            {
-                error: "name or number missing"
-            }
-        )
-    }
+    // if(!request.body.name || !request.body.number) { //Error handling for missing content
+    //     return response.status(400).json(  // Status Code 400 = "Bad Request"
+    //         {
+    //             error: "name or number missing"
+    //         }
+    //     )
+    // }
 
-    const names = persons.map(person => person.name)
-    if (names.includes(request.body.name)) { //Error handling for same name
-        return response.status(400).json( // Status Code 400 = "Bad Request"
-            {
-                error: "name must be unique"
-            }
-        )
-    }
+    // const names = persons.map(person => person.name)
+    // if (names.includes(request.body.name)) { //Error handling for same name
+    //     return response.status(400).json( // Status Code 400 = "Bad Request"
+    //         {
+    //             error: "name must be unique"
+    //         }
+    //     )
+    // }
     
-    const person = { // create new person object from request body
-        id: randomId(),
+    // const person = { // create new person object from request body
+    //     id: randomId(),
+    //     name: body.name,
+    //     number: body.number
+    // }
+    
+    // persons = persons.concat(person) //add new person object to persons array
+
+    // response.json(person) // send new person object as response body
+
+    const person = new Person ({ // create new person object from request body
+        // id: randomId(),
         name: body.name,
         number: body.number
-    }
-    
-    persons = persons.concat(person) //add new person object to persons array
+    })
 
-    response.json(person) // send new person object as response body
+    person.save().then(savedPerson => { // save the person to the database
+        response.json(savedPerson)
+    })
 })
 
 
