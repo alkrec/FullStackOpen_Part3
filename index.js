@@ -51,9 +51,7 @@ app.get('/api/persons', (request, response) => {
         console.log("phonebook:")
         persons.forEach(person => console.log(`${person.name} ${person.number}`))
         response.json(persons)
-        // mongoose.connection.close()
     })
-    // response.json(persons);
 })
 
 
@@ -88,11 +86,17 @@ app.get('/api/persons/:id', (request, response) => {
 
 //
 // Summary: DELETE - delete a single person
-app.delete('/api/persons/:id', (request, response) => {
-    const id = Number(request.params.id)
+app.delete('/api/persons/:id', (request, response, next) => {
+    // const id = Number(request.params.id)
 
-    persons = persons.filter(person => person.id !== id)
-    response.status(204).end() //Status Code 204 = "No Content"
+    // persons = persons.filter(person => person.id !== id)
+    
+    Person.findByIdAndDelete(request.params.id)
+        .then(deletedPerson => {
+            console.log(deletedPerson)
+            response.status(204).end() //Status Code 204 = "No Content"
+        })
+        .catch(error => next(error))
 })
 
 
