@@ -20,6 +20,16 @@ morgan.token('personOutput', function(req, res) { //customize log out for :perso
     return JSON.stringify(person)
 })
 
+const errorHandler = (error, request, response, next) => { //Custom error handler
+    console.log(error.message)
+
+    if (error.name === 'CastError') { //CastError is caused by an invalid object given as a parameter
+        return response.status(400).send({error: 'malformatted id'})
+    }
+
+    next(error)
+}
+
 let persons = [
         { 
           "id": 1,
@@ -150,6 +160,23 @@ app.post('/api/persons', (request, response) => {
     })
 })
 
+//Summary: PUT - updates a person
+app.put('/api/persons/:id', (request, response, next) => {
+    const body = request.body
+
+    const person = {
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+        .then(updatedPerson => {
+            response.json(updatedPerson)
+        })
+        .catch(error => next(error))
+})
+
+app.use(errorHandler) //errorHandler middleware must be placed after http request handlers
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
