@@ -3,7 +3,7 @@ content-type: application/json
 
 {
     "name": "Test new",
-    "number": "1234"
+    "number": "123-12345"
 }
 
 ###
@@ -28,7 +28,7 @@ content-type: application/json
 
 {
     "name": "Ada Lovelace",
-    "number": "5468585"
+    "number": " 10-22-334455"
 }
 
 ###
